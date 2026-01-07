@@ -53,17 +53,13 @@ func TestRoster(t *testing.T) {
 			NodeID:   "node1",
 			NodeType: models.GenericNodeType,
 		}
-		awsAccessKey := "aws"
 		exporters[node] = &models.Agent{
 			AgentID:   "agent1",
 			AgentType: models.RDSExporterType,
-			AWSOptions: models.AWSOptions{
-				AWSAccessKey: awsAccessKey,
-			},
 		}
 
-		const expected = "pmm-server:rds/aws"
-		groupID := r.add("pmm-server", rdsPrefix+awsAccessKey, exporters)
+		const expected = "pmm-server/rds"
+		groupID := r.add("pmm-server", rdsGroup, exporters)
 		assert.Equal(t, expected, groupID)
 
 		PMMAgentID, agentIDs, err := r.get(groupID)
@@ -76,7 +72,7 @@ func TestRoster(t *testing.T) {
 		r, teardown := setup(t)
 		defer teardown(t)
 
-		const groupID = "pmm-server:rds/AWSAccessKey"
+		const groupID = "pmm-server/rds"
 
 		PMMAgentID, agentIDs, err := r.get(groupID)
 		require.NoError(t, err)
@@ -93,18 +89,14 @@ func TestRoster(t *testing.T) {
 			NodeID:   "node1",
 			NodeType: models.GenericNodeType,
 		}
-		awsAccessKey := "aws"
 		exporters[node] = &models.Agent{
 			AgentID:   "agent1",
 			AgentType: models.RDSExporterType,
-			AWSOptions: models.AWSOptions{
-				AWSAccessKey: awsAccessKey,
-			},
 		}
 
-		const expectedGroupID = "pmm-server:rds/aws"
+		const expectedGroupID = "pmm-server/rds"
 		PMMAgentID := "pmm-server"
-		groupID := r.add(PMMAgentID, rdsPrefix+awsAccessKey, exporters)
+		groupID := r.add(PMMAgentID, rdsGroup, exporters)
 		assert.Equal(t, expectedGroupID, groupID)
 
 		r.clear(PMMAgentID)
